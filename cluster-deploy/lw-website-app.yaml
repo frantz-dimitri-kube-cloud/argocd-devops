@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/frantz-dimitri-kube-cloud/argocd-devops.git
-    targetRevision: HEAD
+    targetRevision: develop
     path: lw-is-website-k8s
   destination:
     server: https://kubernetes.default.svc
