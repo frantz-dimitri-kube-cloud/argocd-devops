@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: lw-is
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: lw-is-website-deploy
+  namespace: lw-is
+  labels:
+    app: lw-is
+    tier: front
+
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: lw-is
+      tier: front
+
+  template:
+    metadata:
+      labels:
+        app: lw-is
+        tier: front
+
+    spec:
+      containers:
+      - name: lw-is-website
+        image: frantzdimitrikubecloud/lwissite:1.0.0
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            cpu: "0.2"
+            memory: 100M
+          limits:
+            cpu: "0.9"
+            memory: 1G
+
+        ports:
+        - name: http
+          containerPort: 80
+          protocol: TCP
+
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+            scheme: HTTP
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 4
+
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80   
+            scheme: HTTP
+          initialDelaySeconds: 60   
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 4

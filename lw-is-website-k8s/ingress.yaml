@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: lw-is-website-ingress
+  namespace: lw-is
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: lw-is-website.local # Tu peux changer ce host selon tes besoins ou ton setup DNS/etc.
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: lw-is-service
+            port:
+              number: 80
